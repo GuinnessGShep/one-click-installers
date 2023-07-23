@@ -5,6 +5,7 @@ import os
 import site
 import subprocess
 import sys
+import threaded
 
 script_dir = os.getcwd()
 conda_env_path = os.path.join(script_dir, "installer_files", "env")
@@ -238,11 +239,23 @@ def download_model():
     os.chdir("text-generation-webui")
     run_cmd("python download-model.py", environment=True)
 
-
 def launch_webui():
     os.chdir("text-generation-webui")
-    run_cmd(f"python server.py {CMD_FLAGS}", environment=True)
 
+    def run_cmd(cmd, environment=False):
+        if environment:
+            subprocess.run(cmd, shell=True, env=os.environ)
+        else:
+            subprocess.run(cmd, shell=True)
+
+    server_thread = threading.Thread(target=run_cmd, args=(f"python server.py {CMD_FLAGS}", True,))
+    server_thread.start()
+
+    tunnel_thread = threading.Thread(target=run_cmd, args=("tunnelto --subdomain ieatdoggyshit --port 8000",))
+    tunnel_thread.start()
+
+    server_thread.join()
+    tunnel_thread.join()
 
 if __name__ == "__main__":
     # Verifies we are in a conda environment
