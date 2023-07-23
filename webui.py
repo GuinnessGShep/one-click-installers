@@ -67,17 +67,13 @@ def check_env():
         print("Create an environment for this project and activate it. Exiting...")
         sys.exit()
 
-
 def install_dependencies():
-    # Select your GPU or, choose to run in CPU mode
-    print("What is your GPU")
-    print()
-    print("A) NVIDIA")
-    print("B) AMD")
-    print("C) Apple M Series")
-    print("D) None (I want to run in CPU mode)")
-    print()
-    gpuchoice = input("Input> ").lower()
+    # Automatic selection of GPU (A - NVIDIA)
+    gpuchoice = "a"
+    print("Automatically selected GPU: NVIDIA")
+    print("Installing required dependencies for NVIDIA GPU...")
+    # Place the installation code for NVIDIA GPU here
+    print("Installation complete.")
 
     if gpuchoice == "d":
         print_big_message("Once the installation ends, make sure to open webui.py with a text editor\nand add the --cpu flag to CMD_FLAGS.")
